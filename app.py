@@ -8,13 +8,19 @@ matrix_frame = tkinter.Frame(root)
 winning_frame = tkinter.Frame(root)
 
 def clickEvent(row, col):
-   for i in range(4):
-       for j in range(4):
-           if(matrix[i][j]==None):
-                matrix[i][j] = matrix[row][col]
-                matrix[row][col] = None
-                print(matrix,row,col)
-   displayGrid()
+    if(row-1 >= 0 and row-1<=3 and matrix[row-1][col]==None):
+        matrix[row-1][col] = matrix[row][col]
+        matrix[row][col] = None
+    elif(row+1 >= 0 and row+1<=3 and matrix[row+1][col]==None):
+        matrix[row+1][col] = matrix[row][col]
+        matrix[row][col] = None
+    elif(col-1 >= 0 and col-1<=3 and matrix[row][col-1]==None):
+        matrix[row][col-1] = matrix[row][col]
+        matrix[row][col] = None
+    elif(col+1 >= 0 and col+1<=3 and matrix[row][col+1]==None):
+        matrix[row][col+1] = matrix[row][col]
+        matrix[row][col] = None         
+    displayGrid()
 
 def checkIfWon():
     isWon = True
@@ -28,10 +34,12 @@ def checkIfWon():
 def displayGrid():
     if(checkIfWon()):
         print("won")
-        text = tkinter.Text(root)
+        text = tkinter.Text(winning_frame)
         text.insert('end',"won")
-        text.grid(row=0,col=0)
-        
+        text.pack()
+        winning_frame.pack()
+        matrix_frame.destroy()
+        winning_frame.tkraise()
     else:
         for row in range(4):
             for col in range(4):
