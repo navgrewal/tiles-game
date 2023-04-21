@@ -3,6 +3,7 @@ import random
 import tkinter.messagebox
 from loggeduser import loggedUser
 import database as db
+import savegame as savegame
 
 root = Tk()
 root.geometry("1350x760+0+0")
@@ -97,6 +98,11 @@ def Exit():
         root.destroy()
         return
     
+def save():
+    global btnCheckers
+    print(btnCheckers)
+    savegame.saveGame(btnCheckers)
+
 lblPlayerName = Label(name_frame, textvariable=winnermsg, borderwidth=4, relief="solid",font=('arial',15)).place(x=0,y=3, width=500,height=70 )
   
 lblCountClicks = Label(ScoreFrame, textvariable=displayClicks, borderwidth=4, relief="solid",font=('arial',20)).place(x=0, y=3, width=249,height=90) 
@@ -105,23 +111,33 @@ lblHighScore = Label(ScoreFrame, textvariable=highScoreString, borderwidth=4, re
 
 btnNewGame = tkinter.Button(ActionFrame, text="New Game", font=('arial',20,"bold"),bd=5, borderwidth = 4, relief ="solid", command = shuffle).place(x=0,y=3, width=249,height=100 )
 
-btnSaveGame = tkinter.Button(ActionFrame, text="Save Game", font=('arial',20,"bold"),bd=5, borderwidth = 4, relief ="solid", command = "").place(x=250,y=3, width=250,height=100 )
+btnSaveGame = tkinter.Button(ActionFrame, text="Save Game", font=('arial',20,"bold"),bd=5, borderwidth = 4, relief ="solid", command = save).place(x=250,y=3, width=250,height=100 )
 
 btnSaveGame = tkinter.Button(ActionFrame, text="Logout", font=('arial',20,"bold"),bd=5, borderwidth = 4, relief ="solid", command = Exit).place(x=0,y=104, width=500,height=100 )
 
 
 btnCheckers = []
 name = 0
-
-for y in range(3):
-    btnChecker = []
-    for x in range(4):
-        name += 1
-        if name == 12:
-            name = ""
-        btnChecker.append(Buttons(str(name), x,y))
-    btnCheckers.append(btnChecker)
-shuffle()
+print(loggedUser["username"])
+savegame.getSavedGame()
+print(savegame.savedGame)
+if(savegame.savedGame):
+    print(savegame.savedGame)
+    for y in range(3):
+        btnChecker = []
+        for x in range(4):
+            btnChecker.append(Buttons(str(savegame.savedGame[y][x]), x,y))
+        btnCheckers.append(btnChecker)
+else:
+    for y in range(3):
+        btnChecker = []
+        for x in range(4):
+            name += 1
+            if name == 12:
+                name = ""
+            btnChecker.append(Buttons(str(name), x,y))
+        btnCheckers.append(btnChecker)
+    shuffle()
 def emptyspotChecker(y, x) :
     global btnCheckers, clickCounter
     if not btnCheckers [x] [y].txtIntake.get() == "":

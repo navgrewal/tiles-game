@@ -2,6 +2,7 @@ from tkinter import *
 import os
 import database as db 
 
+invalid_msg = None
 def delete2():
     screen3.destroy()
 
