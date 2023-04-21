@@ -1,7 +1,6 @@
 from tkinter import *
 import os
 import database as db 
-import loggeduser
 
 def delete2():
     screen3.destroy()

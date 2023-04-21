@@ -1,89 +1,24 @@
 from tkinter import*
 import random
 import tkinter.messagebox
-
+from loggeduser import loggedUser
+import database as db
 
 root = Tk()
 root.geometry("1350x760+0+0")
 root.title("Number Puzzle Game")
-root.configure(bg = 'Lightgray')
-
-
-# def startNewGame():
-#     game = Game(root)
-
-# class Game:
-#     WINNING_MATRIX = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,None]]
-#     matrix = [[None,None,None,None],[None,None,None,None],[None,None,None,None],[None,None,None,None]]
-
-#     def __init__(self, root):
-#         self.root = root
-#         self.generateRandomMatrix()
-#         self.matrix_frame = tkinter.Frame(self.root)
-#         self.winning_frame = tkinter.Frame(self.root)
-#         self.displayFrame()
-        
-#     def generateRandomMatrix(self):
-#         # matrix = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,None]
-#         # random.shuffle(matrix)
-#         # for row in range(4):
-#         #     for col in range(4):
-#         #         self.matrix[row][col] = matrix[(row*4)+col]
-#         self.matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,None]]
-
-
-#     def checkIfWon(self):
-#         isWon = True
-#         for row in range(4):
-#             for col in range(4):
-#                 if(self.matrix[row][col]!= self.WINNING_MATRIX[row][col]):
-#                     isWon = False
-#                     break
-#         return isWon
-
-#     def displayFrame(self):
-#         if(self.checkIfWon()):
-#             text = tkinter.Text(self.winning_frame)
-#             text.insert('end',"won")
-#             text.pack()
-#             self.winning_frame.pack()
-#             self.matrix_frame.destroy()
-#             self.winning_frame.tkraise()
-#         else:
-#             for row in range(4):
-#                 for col in range(4):
-#                     tile = tkinter.Button(self.matrix_frame, text=self.matrix[row][col],
-#                         borderwidth=10 ,command=lambda r=row,c=col:self.clickEvent(r,c))
-#                     tile.grid(row=row,column=col)
-#             self.matrix_frame.pack()
-#             self.matrix_frame.tkraise()
-
-#     def clickEvent(self,row, col):
-#         if(row-1 >= 0 and row-1<=3 and self.matrix[row-1][col]==None):
-#             self.matrix[row-1][col] = self.matrix[row][col]
-#             self.matrix[row][col] = None
-#         elif(row+1 >= 0 and row+1<=3 and self.matrix[row+1][col]==None):
-#             self.matrix[row+1][col] = self.matrix[row][col]
-#             self.matrix[row][col] = None
-#         elif(col-1 >= 0 and col-1<=3 and self.matrix[row][col-1]==None):
-#             self.matrix[row][col-1] = self.matrix[row][col]
-#             self.matrix[row][col] = None
-#         elif(col+1 >= 0 and col+1<=3 and self.matrix[row][col+1]==None):
-#             self.matrix[row][col+1] = self.matrix[row][col]
-#             self.matrix[row][col] = None         
-#         self.displayFrame()
-        
+root.configure(bg = 'Lightgray')        
     
 rootFrame = Frame(root, bg='Lightgray', pady =2, padx = 40, width=1350, height=100, relief= "solid" )
 rootFrame.grid(row=0,column = 0)
 
-lblTitle = Label(rootFrame,font=('arial',80,'bold'), text="Number Puzzle Game", bd = 10, bg="Cadet Blue", fg='dimgray',justify=CENTER,borderwidth=12,relief="solid",width=19)
+lblTitle = Label(rootFrame,font=('arial',80,'bold'), text="Tiles Game", bd = 10, bg="Cadet Blue", fg='dimgray',justify=CENTER,borderwidth=12,relief="solid",width=19)
 lblTitle.grid(row=4,column = 0)
 
 MainFrame = Frame(root, bg='Cadet Blue', bd =10, width=1350, height=600, relief= "solid" )
 MainFrame.grid(row=1,column = 0,padx=30)
 
-matrix_frame = LabelFrame(MainFrame,text="Number Puzzle",font=('arial',12,'bold'),fg='cornsilk',bg='cadet blue',bd=10,width=700,height=500, relief=RAISED)
+matrix_frame = LabelFrame(MainFrame,text="Tiles",font=('arial',12,'bold'),fg='cornsilk',bg='cadet blue',bd=10,width=700,height=500, relief=RAISED)
 matrix_frame.pack(side=LEFT)
 
 ScoreButtonFrame = Frame(MainFrame ,bg='cadet blue',bd=10,padx=1,width=540,height=500, relief=RAISED)
@@ -104,7 +39,7 @@ NameVariable = StringVar()
 NameVariable.set("")
 
 clickCounter = 0
-highscore = 0
+highscore = loggedUser["highscore"]
 winnermsg = StringVar()
 displayClicks = StringVar()
 displayClicks .set("Currunt Score" +"\n"+"0")
@@ -115,6 +50,9 @@ highScoreString.set("High Score" +"\n"+ str(highscore))
 def winner():
     global winnermsg
     winnermsg .set("You Won")
+    if(clickCounter<highscore):
+        db.updateHighScore(loggedUser["username"],clickCounter)
+
 def updatecounter():
     global clickCounter, displayClicks
     displayClicks .set("Current Score" +"\n"+str(clickCounter))
@@ -218,6 +156,6 @@ def checkwinner():
                 break
     if not lost:
         winner()
-    
-        
-root.mainloop()
+
+def game_screen():
+    root.mainloop()
