@@ -1,10 +1,3 @@
-import tkinter
-from classes.game import Game
+from login_signup import main_screen
 
-
-def startNewGame():
-    game = Game(root)
-
-root = tkinter.Tk(  )
-startNewGame()
-root.mainloop()
+main_screen()
