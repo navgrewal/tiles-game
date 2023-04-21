@@ -38,14 +38,21 @@ def user_not_found():
     Button(screen5, text="OK", width=10, height=1, command= delete4).pack()
 
 def register_user():
+    global invalid_msg
     username_info = username.get()
     password_info = password.get()
     name_info = name.get()
-    db.createUser(name_info, username_info, password_info)
-
-    username_entry.delete(0, END)
-    password_entry.delete(0, END)
-    Label(screen1, text = "Registration Success", fg="green", font= ("Calibri", 11)).pack()
+    if(name_info and username_info and password_info):
+        db.createUser(name_info, username_info, password_info)
+        username_entry.delete(0, END)
+        password_entry.delete(0, END)
+        if(invalid_msg):
+            invalid_msg.destroy()
+        Label(screen1, text = "Registration Success", fg="green", font= ("Calibri", 11)).pack()
+    else:
+        invalid_msg = Label(screen1, text = "Invalid Inputs", fg="red", font= ("Calibri", 11))
+        invalid_msg.pack()
+    
 
 def login_verify():
     username1 = username_verify.get()
