@@ -43,16 +43,23 @@ clickCounter = 0
 highscore = loggedUser["highscore"]
 winnermsg = StringVar()
 displayClicks = StringVar()
-displayClicks .set("Currunt Score" +"\n"+"0")
+displayClicks .set("Current Score" +"\n"+"0")
 
 highScoreString = StringVar()
 highScoreString.set("High Score" +"\n"+ str(highscore))
 
 def winner():
-    global winnermsg
+    global winnermsg, highscore
     winnermsg .set("You Won")
+    if(highscore==0):
+        db.updateHighScore(loggedUser["username"],clickCounter+1)
+        highscore = clickCounter+1
+        highscoreUpdate()
     if(clickCounter<highscore):
-        db.updateHighScore(loggedUser["username"],clickCounter)
+        db.updateHighScore(loggedUser["username"],clickCounter+1)
+        highscore = clickCounter+1
+        highscoreUpdate()
+
 
 def updatecounter():
     global clickCounter, displayClicks
@@ -137,7 +144,7 @@ else:
                 name = ""
             btnChecker.append(Buttons(str(name), x,y))
         btnCheckers.append(btnChecker)
-    shuffle()
+    # shuffle()
 def emptyspotChecker(y, x) :
     global btnCheckers, clickCounter
     if not btnCheckers [x] [y].txtIntake.get() == "":
